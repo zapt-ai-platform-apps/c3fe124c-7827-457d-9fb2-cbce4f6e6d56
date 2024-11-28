@@ -12,7 +12,7 @@ function App() {
     if (loading()) return; // Prevent multiple submissions
     setLoading(true);
 
-    const prompt = `Suggest some names for a ${petType()} that is ${petDescription()}. Provide the names in a JSON array, with no other text.`;
+    const prompt = `Suggest 10 names for a ${petType()} that is ${petDescription()}. Provide the names in a JSON object with a "names" property, which is an array of strings. Do not include any other text.`;
 
     try {
       const result = await createEvent('chatgpt_request', {
@@ -20,7 +20,7 @@ function App() {
         response_type: 'json',
       });
 
-      setNames(result);
+      setNames(result.names);
     } catch (error) {
       console.error('Error generating names:', error);
     } finally {
@@ -57,7 +57,9 @@ function App() {
         </div>
         <button
           type="submit"
-          class={`w-full px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${loading() ? 'opacity-50 cursor-not-allowed' : ''}`}
+          class={`w-full px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
+            loading() ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           disabled={loading()}
         >
           <Show when={!loading()} fallback="Generating...">
@@ -71,16 +73,16 @@ function App() {
           <h2 class="text-2xl font-bold mb-4">Suggested Names</h2>
           <ul class="list-disc pl-5 space-y-2">
             <For each={names()}>
-              {(name) => (
-                <li class="text-gray-700">{name}</li>
-              )}
+              {(name) => <li class="text-gray-700">{name}</li>}
             </For>
           </ul>
         </div>
       </Show>
 
       <div class="mt-8">
-        <a href="https://www.zapt.ai" target="_blank" class="text-blue-500 hover:underline cursor-pointer">Made on ZAPT</a>
+        <a href="https://www.zapt.ai" target="_blank" class="text-blue-500 hover:underline cursor-pointer">
+          Made on ZAPT
+        </a>
       </div>
     </div>
   );
